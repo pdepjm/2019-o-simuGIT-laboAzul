@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: PdepVersionControl
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: PdepVersionControl; singleton:=true
+Bundle-SymbolicName: PdepVC-simuGIT-laboAzul;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.ibm.icu,
  org.eclipse.xtext,

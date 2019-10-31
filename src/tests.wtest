@@ -1,6 +1,49 @@
+import parcial.*
 
-test "testX" {
-
-	assert.that(true)
-
+describe "tests del parcial" {
+	// carpetas
+	var carpetaLlena = new Carpeta(archivos = #{new Archivo(nombre = "leeme.MD")})
+	var carpetaVacia = new Carpeta(archivos = #{})
+	// cambios
+	var crearLeeme = new Crear(nombreArchivo = "leeme.MD")
+	var crearParcialpdep = new Crear(nombreArchivo = "parcial.wlk")
+	var agregarTextoParcial = new Agregar(nombreArchivo = "parcial.wlk", texto = "Este es un parcial")
+	// commits
+	var commitInicial = new Commit(cambios=[crearLeeme,crearParcialpdep,agregarTextoParcial], descripcion = "Commit inicial")
+	
+	// Este test contaba como el que se pide en el enunciado
+	// "un test que demuestre que se devuelve bien algo"
+	// malos nombres:
+	// "consulta carpeta llena"
+	// "si la carpeta llena tiene el leeme"
+	test "Contiene archivo anda para una carpeta que tiene el archivo" {
+		assert.that(carpetaLlena.contieneArchivo("leeme.MD"))
+	}
+	
+	// Faltarian testear los cambios uno por uno, aunque no se pedia en el parcial.
+	// Cuenta como "un test que modifique..."
+	// Por ejemplo:
+	test "Al aplicar el cambio crear en una carpeta, se crea el archivo"{
+		crearLeeme.aplicarEn(carpetaVacia)
+		assert.that(carpetaVacia.contieneArchivo("leeme.MD"))
+	}
+	// etc.. 
+	
+	test "Al aplicar un commit se aplican todos los cambios del mismo"{
+		commitInicial.aplicarCambiosEn(carpetaVacia)
+		assert.that(carpetaVacia.contieneArchivo("leeme.MD"))
+		assert.that(carpetaVacia.contieneArchivo("parcial.wlk"))
+		assert.that(carpetaVacia.archivo("leeme.MD").contenido() == "")
+		assert.that(carpetaVacia.archivo("parcial.wlk").contenido() == "Este es un parcial")
+	}
+	
+	test "Al crear en una carpeta que existe el archivo debe tirar error" {
+		assert.throwsExceptionWithMessage("Ya está el archivo", {crearLeeme.aplicarEn(carpetaLlena)})
+	}
+	
+	test "El revert deshace todos los cambios"{
+		commitInicial.aplicarCambiosEn(carpetaVacia)
+		commitInicial.revert().aplicarCambiosEn(carpetaVacia)
+		assert.that(carpetaVacia.estaVacia())
+	}
 }
